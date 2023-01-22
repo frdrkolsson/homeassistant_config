@@ -1,6 +1,6 @@
 blueprint:
-  name: Motion-activated Light With Time Support
-  description: Turn on a light when motion is detected during set time.
+  name: Motion-activated Light with Time and Brightness Support
+  description: Turn on a light when motion is detected during set time, and set to chosen brightness.
   domain: automation
   input:
     motion_entity:
@@ -34,6 +34,13 @@ blueprint:
       description: Time to stop using this automation.
       selector:
         time:
+    brightness:
+      name: Brightness
+      description: Set the brightness of the light.
+      selector:
+        number:
+          min: 0
+          max: 255
 
 # If motion is detected within the delay,
 # we restart the script.
@@ -56,6 +63,8 @@ action:
   - alias: "Turn on the light"
     service: light.turn_on
     target: !input light_target
+    data:
+      brightness: !input brightness
   - alias: "Wait until there is no motion from device"
     wait_for_trigger:
       platform: state
